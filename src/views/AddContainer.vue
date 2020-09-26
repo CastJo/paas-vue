@@ -58,7 +58,7 @@
                 </el-table-column>
               </el-table>
 
-              <!--展示从dockerhun上拉取的信息-->
+              <!--展示从dockerhub上拉取的信息-->
               <el-table
                   :data="imageList"
                   height="300"
@@ -105,14 +105,14 @@
 
               </el-table>
 
-              <!--展示从passHub上拉取的信息-->
+              <!--展示从paasHub上拉取的信息-->
 
               <el-table
                   :data="imageList"
                   height="300"
                   style="width: 100%"
                   v-if="label == '/hub/list'"
-                  @row-dblclick="getpasshubImageId($event)"
+                  @row-dblclick="getPaasHubImageId($event)"
                   v-loading="loading">
                 <el-table-column
                     prop="name"
@@ -293,7 +293,7 @@
                     {label: "本地公共镜像", id: "/image/list/local?type=1"},
                     {label: "本地个人镜像", id: "/image/list/local?type=2"},
                     {label: "DockerHub", id: "/image/list/hub?name="},
-                    {label: "PasSHub", id: "/hub/list"}
+                    {label: "PaaSHub", id: "/hub/list"}
                 ],
                 showTable: false,
                 imageList: [],
@@ -317,9 +317,9 @@
         },
         computed: {
             ...mapGetters({
-                projectId: 'getProjectId',
+                // projectId: 'getProjectId',
                 userInfo: 'getUserInfo',
-                host_addr: 'getHostAddr',
+                // host_addr: 'getHostAddr',
             })
         },
         methods: {
@@ -343,7 +343,7 @@
                 //paasHub列表
                 if (val == "/hub/list") {
                     this.loading = true;
-                    this.getFromPassHub(val);
+                    this.getFromPaasHub(val);
                     return;
                 }
 
@@ -397,8 +397,8 @@
                         console.log(err)
                     })
             },
-            //从passHub获取name
-            getFromPassHub(val) {
+            //从paasHub获取name
+            getFromPaasHub(val) {
                 this.loading = true;
                 this.imageList = [];
                 this.$axios.get(val)
@@ -411,9 +411,9 @@
                     })
 
                 this.loading = false;
-                return;
+
             },
-            //从passHub获取tag
+            //从paasHub获取tag
             getTagFromPass() {
                 if (this.nameList.length == 0) {
                     this.loading = false;
@@ -446,7 +446,7 @@
             //双击行选则镜像id
             getImageId(column) {
                 this.container.imageId = column.id;
-                this.container.imageName = column.fullName;
+                this.container.imageName = column.name;
                 this.container.port = [{in: '', out: ''}];
 
                 console.log(this.container.imageId)
@@ -478,10 +478,10 @@
                 this.container.imageName = column.name;
             },
             //获取passHub镜像的id
-            getPassHubImageId(column) {
+            getPaasHubImageId(column) {
 
                 this.container.imageId = ''
-                this.passhubId = column.id;
+                this.paasHubId = column.id;
                 this.container.imageName = column.name;
             },
             //添加
@@ -601,9 +601,9 @@
                     this.$message.warning("请填写容器名称");
                     return;
                 }
-                let cmd = new Array();
-                let env = new Array();
-                let destination = new Array();
+                let cmd = [];
+                let env = [];
+                let destination = [];
                 for (let i = 0; i < this.container.cmd.length; i++) {
                     cmd[i] = this.container.cmd[i].value;
                 }
@@ -821,7 +821,7 @@
   }
 
   #imageDiv {
-    box-shadow: 0px 0px 5px #d1d1d1;
+    box-shadow: 0 0 5px #d1d1d1;
     min-height: 300px;
   }
 

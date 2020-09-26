@@ -149,7 +149,7 @@
         computed: {
             ...mapGetters({
                 userInfo: 'getUserInfo',
-                host_addr: 'getHostAddr'
+                // host_addr: 'getHostAddr'
             })
         },
         methods: {
@@ -228,54 +228,54 @@
                 }
             },
             // 初始化websocket
-            initWebSocket: function () { //初始化websocket
-                this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
-
-                this.websock.onopen = this.websocketOnOpen;
-
-                this.websock.onmessage = this.websocketOnMessage;
-
-                this.websock.onclose = this.websocketClose;
-            },
-
-            websocketOnOpen: function () {
-                console.log("WebSocket连接成功");
-            },
-
-            websocketOnError: function () { //错误
-                console.log("WebSocket连接发生错误");
-            },
-
-            websocketOnMessage: function (e) { //数据接收
-                let data = eval('(' + e.data + ')');
-                if (data.info == null) {
-                    if (data.code === 0) {
-                        this.$notify({
-                            type: 'success',
-                            message: data.message,
-                            duration: 3000
-                        });
-
-                    } else {
-                        this.$notify({
-                            type: 'error',
-                            message: data.message,
-                            duration: 3000
-                        });
-                    }
-                }
-                else {
-                    console.log(data.info)
-                }
-            },
-
-            websocketSend: function (agentData) {//数据发送
-                this.websock.send(agentData);
-            },
-
-            websocketClose: function (e) { //关闭
-                console.log("connection closed (" + e.code + ")");
-            },
+            // initWebSocket: function () { //初始化websocket
+            //     this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
+            //
+            //     this.websock.onopen = this.websocketOnOpen;
+            //
+            //     this.websock.onmessage = this.websocketOnMessage;
+            //
+            //     this.websock.onclose = this.websocketClose;
+            // },
+            //
+            // websocketOnOpen: function () {
+            //     console.log("WebSocket连接成功");
+            // },
+            //
+            // websocketOnError: function () { //错误
+            //     console.log("WebSocket连接发生错误");
+            // },
+            //
+            // websocketOnMessage: function (e) { //数据接收
+            //     let data = eval('(' + e.data + ')');
+            //     if (data.info == null) {
+            //         if (data.code === 0) {
+            //             this.$notify({
+            //                 type: 'success',
+            //                 message: data.message,
+            //                 duration: 3000
+            //             });
+            //
+            //         } else {
+            //             this.$notify({
+            //                 type: 'error',
+            //                 message: data.message,
+            //                 duration: 3000
+            //             });
+            //         }
+            //     }
+            //     else {
+            //         console.log(data.info)
+            //     }
+            // },
+            //
+            // websocketSend: function (agentData) {//数据发送
+            //     this.websock.send(agentData);
+            // },
+            //
+            // websocketClose: function (e) { //关闭
+            //     console.log("connection closed (" + e.code + ")");
+            // },
             getUserMirror() {
                 this.$axios.get('/image/list/local?type=2&current=' + this.currentPage + '&size=' + this.pageSize)
                     .then(response => {

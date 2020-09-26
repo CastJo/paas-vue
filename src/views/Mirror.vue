@@ -382,13 +382,6 @@
                 this.getMirrorList();
             },
 
-   // 本地选择镜像文件实时函数
-            importImage: function (event) {
-                event.preventDefault();//取消默认行为
-                this.image = event.target.files[0];
-                this.fileName = event.target.files[0].name;
-            },
-
 //    导入镜像
             importMirror: function () {
                 let that = this;
@@ -425,11 +418,6 @@
                 });
             },
 
-//    表格记录选中操作
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
-            },
-
 //    设置为公开
             handleOpen: function (index, row) {
                 this.$axios.get("/image/share/" + row.id)
@@ -457,70 +445,70 @@
 
             },
             //初始化websocket
-            initWebSocket() {
-
-                this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
-                this.websock.onopen = this.websocketonopen;
-
-                this.websock.onerror = this.websocketonerror;
-
-                this.websock.onmessage = this.websocketonmessage;
-
-                this.websock.onclose = this.websocketclose;
-
-            },
-
-            //打开websocket
-            websocketOnOpen: function () {
-                console.log("WebSocket连接成功");
-            },
-
-            //打开错误
-            websocketOnError: function () { //错误
-                this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
-                this.time1 = setInterval(this.start, 5000);
-
-            },
-
-            //数据接收
-            websocketOnMessage: function (e) {
-              let data = eval('(' + e.data + ')');
-              if (data.info == null) {
-                    if (data.code === 0) {
-                        this.$notify({
-                            type: 'success',
-                            message: data.message,
-                            duration: 3000
-                        });
-                        this.getMirrorList();
-                    } else {
-                        this.$notify({
-                            type: 'error',
-                            message: data.message,
-                            duration: 3000
-                        });
-                    }
-                }
-                else {
-                    console.log(data.info)
-                }
-
-            },
-
-            //关闭
-            websocketClose: function (e) {
-                console.log("connection closed (" + e.code + ")");
-                this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
-            },
-
-            start: function () {
-                this.websock.send("HeartBeat");
-            },
+            // initWebSocket() {
+            //
+            //     this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userId);
+            //     this.websock.onopen = this.websocketonopen;
+            //
+            //     this.websock.onerror = this.websocketonerror;
+            //
+            //     this.websock.onmessage = this.websocketonmessage;
+            //
+            //     this.websock.onclose = this.websocketclose;
+            //
+            // },
+            //
+            // //打开websocket
+            // websocketOnOpen: function () {
+            //     console.log("WebSocket连接成功");
+            // },
+            //
+            // //打开错误
+            // websocketOnError: function () { //错误
+            //     this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
+            //     this.time1 = setInterval(this.start, 5000);
+            //
+            // },
+            //
+            // //数据接收
+            // websocketOnMessage: function (e) {
+            //   let data = eval('(' + e.data + ')');
+            //   if (data.info == null) {
+            //         if (data.code === 0) {
+            //             this.$notify({
+            //                 type: 'success',
+            //                 message: data.message,
+            //                 duration: 3000
+            //             });
+            //             this.getMirrorList();
+            //         } else {
+            //             this.$notify({
+            //                 type: 'error',
+            //                 message: data.message,
+            //                 duration: 3000
+            //             });
+            //         }
+            //     }
+            //     else {
+            //         console.log(data.info)
+            //     }
+            //
+            // },
+            //
+            // //关闭
+            // websocketClose: function (e) {
+            //     console.log("connection closed (" + e.code + ")");
+            //     this.websock = new WebSocket("ws://" + this.host_addr + "/ws/" + this.userInfo.userId);
+            // },
+            //
+            // start: function () {
+            //     this.websock.send("HeartBeat");
+            // },
 
         },
         created() {
             this.getMirrorList();
-            this.initWebSocket();
+            //this.initWebSocket();
             this.time = setInterval(() => {
                 this.start();
             }, 5000);
@@ -532,7 +520,8 @@
         computed: {
             ...mapGetters({
                 userInfo: 'getUserInfo',
-                host_addr: 'getHostAddr'
+                userId: 'getUserId',
+                // host_addr: 'getHostAddr'
             })
         }
     }
@@ -575,47 +564,11 @@
         color: #99a9bf;
     }
 
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
-
     /*分页*/
 
     /*上传文件*/
     .upAndDown {
         width: 100%;
         height: 40px;
-    }
-
-    .file-box {
-        clear: both;
-        width: 98px;
-        height: 40px;
-        color: #606266;
-        line-height: 40px;
-        font-size: 14px;
-        cursor: pointer;
-        text-align: center;
-        display: inline-block;
-        background-color: #ffffff;
-        border: 1px solid #DCDFE6;
-        border-radius: 5px;
-    }
-
-    .file-btn {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        outline: none;
-        background-color: transparent;
-        filter: alpha(opacity=0);
-        -moz-opacity: 0;
-        -khtml-opacity: 0;
-        opacity: 0;
     }
 </style>

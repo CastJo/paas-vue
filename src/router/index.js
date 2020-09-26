@@ -32,14 +32,24 @@ const routes = [
         component: loadView("Index"),
         children: [
             {
-                path: "/home",
-                name: "Home",
-                component: loadView("Home"),
-            },
-            {
                 path: "/monitor",
                 name: "Monitor",
                 component: loadView("Monitor"),
+            },
+            {
+                path: "/container",
+                name: "Container",
+                component: loadView("AddContainer"),
+            },
+            {
+                path: "/mirror",
+                name: "Mirror",
+                component: loadView("Mirror"),
+            },
+            {
+                path: "/public_mirror",
+                name: "PublicMirror",
+                component: loadView("PublicMirror"),
             },
         ]
     }

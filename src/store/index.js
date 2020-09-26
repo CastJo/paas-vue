@@ -53,6 +53,11 @@ export default new Vuex.Store({
 
   },
   getters:{
-
+    getUserInfo(state) {
+      return state.userInfo
+    },
+    getUserId(state) {
+      return state.userid
+    },
   }
 })
