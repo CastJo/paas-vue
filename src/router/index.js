@@ -19,7 +19,12 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
     {
         path: '/',
-        redirect: "/home",
+        redirect: "/login",
+    },
+    {
+        path: "/login",
+        name: "Login",
+        component: loadView("Login"),
     },
     {
         path: "/index",
@@ -30,6 +35,11 @@ const routes = [
                 path: "/home",
                 name: "Home",
                 component: loadView("Home"),
+            },
+            {
+                path: "/monitor",
+                name: "Monitor",
+                component: loadView("Monitor"),
             },
         ]
     }
