@@ -19,7 +19,7 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
     {
         path: '/',
-        redirect: "/login",
+        redirect: "/container",
     },
     {
         path: "/login",
@@ -30,11 +30,24 @@ const routes = [
         path: "/index",
         name: "Index",
         component: loadView("Index"),
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
-                path: "/home",
-                name: "Home",
-                component: loadView("Home"),
+                path: "/container",
+                name: "Container",
+                component: loadView("Container"),
+            },
+            {
+                path: "/image",
+                name: "Image",
+                component: loadView("Image"),
+            },
+            {
+                path: "/public-image",
+                name: "PublicImage",
+                component: loadView("PublicImage"),
             },
             {
                 path: "/monitor",

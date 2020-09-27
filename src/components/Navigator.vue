@@ -8,10 +8,11 @@
         <div class="corner" style="padding-left: 50%">
 
 
+          <span>你好，{{this.user.username}}</span>
           <el-dropdown class="item" @command="handleCommand">
               <el-avatar
                   fit="contain"
-                  :src="this.$store.state.userInfo.avatarUrl"
+                  :src="this.user.avatarUrl"
               ></el-avatar>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="/home">我的资源</el-dropdown-item>
@@ -51,7 +52,7 @@ export default {
   },
   computed: {
     user(){
-      return this.$store.state.userInfo;
+      return this.$store.state.user;
     },
 
   },

@@ -52,7 +52,7 @@
             :rules="rule2"
             label-position="left"
         >
-          <el-form-item label="姓名" prop="username">
+          <el-form-item label="用户名" prop="username">
             <el-input v-model="registerInfo.username"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
@@ -69,19 +69,6 @@
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="registerInfo.email"></el-input>
-          </el-form-item>
-          <el-form-item label="验证码">
-            <div style="display: flex">
-              <el-input v-model="registerInfo.code"></el-input>
-              <el-button
-                  :disabled="inputed"
-                  @click="sendPin"
-                  type="primary"
-                  plain
-              ><span v-if="inputed">{{ this.auth_time }}</span>
-                <span v-else>获取验证码</span></el-button
-              >
-            </div>
           </el-form-item>
         </el-form>
         <div class="btn">
@@ -171,28 +158,23 @@ export default {
               )
               .then((successResponse) => {
                 console.log(successResponse);
-                if (successResponse.status === 200) {
-                  var data = successResponse.data;
-                  console.log(data);
-                  //用户id存入sessionStorage
-                  this.$store.commit("setUser", data);
-                  //加载好友和群聊
-                  //更新系统信息
-                  this.$router.push("/home/");
-                  this.$notify({
-                    title: "成功",
-                    message: "登录成功！",
-                    type: "success",
-                  });
-                } else if (successResponse.status === 400) {
+                var data = successResponse.data;
+                console.log(data);
+                if (data === "") {
                   this.$notify.error({
                     title: "错误",
                     message: "密码输入错误",
                   });
                 } else {
-                  this.$notify.error({
-                    title: "Error",
-                    message: "unknown error found in login",
+                  //用户id存入sessionStorage
+                  this.$store.commit("setUser", data);
+                  this.$store.commit("login", successResponse.headers.authorization)
+                  //跳转主页
+                  this.$router.push("/");
+                  this.$notify({
+                    title: "成功",
+                    message: "登录成功！",
+                    type: "success",
                   });
                 }
               })
@@ -219,14 +201,12 @@ export default {
           if (this.index === 2) {
             this.$axios
                 .post(
-                    "/api/user/register?username="+
+                    "/auth/register?username="+
                     this.registerInfo.username +
                     "&password=" +
                     this.registerInfo.password +
-                    "&emailAddress=" +
-                    this.registerInfo.email +
-                    "&code=" +
-                    this.registerInfo.code
+                    "&email=" +
+                    this.registerInfo.email
                 )
                 .then((successResponse) => {
                   // var responseResult = JSON.stringify(successResponse.data);
@@ -235,7 +215,7 @@ export default {
                     this.index = 1;
                     this.$notify({
                       title: "成功",
-                      message: "注册成功！",
+                      message: "注册成功，请前往邮箱激活用户！",
                       type: "success",
                     });
                   } else if (successResponse.status === 400) {
@@ -257,49 +237,6 @@ export default {
           // 老师
         }
       });
-    },
-    sendPin: function() {
-      // ctrl c ctrl v
-      this.$axios
-          .post("/api/user/code?emailAddress=" + this.registerInfo.email)
-          .then((response) => {
-            console.log(response);
-            if (this.registerInfo.email === "") {
-              this.$notify.error({
-                title: "错误",
-                message: "请输入邮箱",
-              });
-            } else if (response.status === 400) {
-              this.$notify.error({
-                title: "错误",
-                message: "邮箱已被注册",
-              });
-            } else if (response.status === 200) {
-              // this.emailAddress = this.registerInfo.email;
-              this.inputed = true;
-              this.$notify({
-                title: "成功",
-                message: "验证码已发送",
-                type: "success",
-              });
-              this.auth_time = 60;
-              this.valid_time = 300;
-              var auth_timetimer = setInterval(() => {
-                this.auth_time--;
-                this.valid_time--;
-                if (this.auth_time <= 0) {
-                  this.inputed = false;
-                }
-                if (this.valid_time <= 0) {
-                  clearInterval(auth_timetimer);
-                }
-              }, 1000);
-            }
-          })
-          .catch(function(error) {
-
-            console.log(error);
-          });
     },
   },
 };
