@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button @click="monitorVisible=true">查看监控</el-button>
-    <monitor-dialog :visible.sync="monitorVisible"/>
+    <monitor-dialog :visible.sync="monitorVisible" :cId="containerId"/>
   </div>
 
 </template>
@@ -15,6 +15,7 @@ export default {
   data() {
     return {
       monitorVisible:false,
+      containerId:"",
     }
   },
   mounted() {

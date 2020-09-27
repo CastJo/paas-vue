@@ -30,6 +30,7 @@
 
 
     <el-button @click="addData">获取数据</el-button>
+      <el-button @click="autoData">自动获取数据</el-button>
     <el-button @click="clearData">清空数据</el-button>
     </el-dialog>
   </div>
@@ -41,7 +42,7 @@ import {formatDuring} from "@/js/formatTime";
 
 export default {
   name: 'MonitorDialog',
-  props:["visible"],
+  props:["visible","cId"],
   data() {
     return {
       options1: {},
@@ -61,7 +62,7 @@ export default {
   },
   mounted() {
     this.setOptions()
-    setInterval(this.addData,2000)
+    //setInterval(this.getData,2000)
   },
   methods: {
     setOptions() {
@@ -129,17 +130,39 @@ export default {
         }]
       }
     },
+    autoData(){
+      setInterval(this.addData,2000)
+    },
+    getData(){
+      const that=this
+      this.$axios.get(`/monitor/container/actual/${this.cId}`)
+          .then(res => {
+            const tmp = res.data
+            for (let i in tmp){
+              this.$store.commit("pushMonitorInfo", i)
+            }
+            this.setOptions()
+            console.log(this.monitorInfo)
+      }).catch(err => {
+        console.log(err)
+        that.$notify.error({
+          title: "错误",
+          message: "请求出现错误",
+        });
+      })
+    },
     addData() {
       const tmp = {
         timestamp: formatDuring("yyyy-MM-dd hh:mm:ss", new Date()),
-        value1: Math.round(Math.random() * 100),
-        value2: Math.round(Math.random() * 100),
-        value3: Math.round(Math.random() * 100),
-        value4: Math.round(Math.random() * 100),
+        rxBytes: Math.round(Math.random() * 100),
+        txBytes: Math.round(Math.random() * 100),
+        cpuUtilization: Math.round(Math.random() * 100),
+        memoryUsage: Math.round(Math.random() * 100),
       }
       this.$store.commit("pushMonitorInfo", tmp)
       this.setOptions()
       console.log(this.monitorInfo)
+
     },
     clearData() {
       this.$store.commit("clearMonitorInfo")
@@ -157,16 +180,16 @@ export default {
       return this.$store.state.monitorInfo.map(x => x['timestamp'])
     },
     Data1() {
-      return this.$store.state.monitorInfo.map(x => x['value1'])
+      return this.$store.state.monitorInfo.map(x => x['rxBytes'])
     },
     Data2() {
-      return this.$store.state.monitorInfo.map(x => x['value2'])
+      return this.$store.state.monitorInfo.map(x => x['txBytes'])
     },
     Data3() {
-      return this.$store.state.monitorInfo.map(x => x['value3'])
+      return this.$store.state.monitorInfo.map(x => x['cpuUtilization'])
     },
     Data4() {
-      return this.$store.state.monitorInfo.map(x => x['value4'])
+      return this.$store.state.monitorInfo.map(x => x['memoryUsage'])
     }
   }
 }
